@@ -1,0 +1,42 @@
+﻿@model Soccer.Web.Models.TeamViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<hr />
+<div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-4">
+        <h3>Edit Team</h3>
+        <form asp-action="AddOrUpdate" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="isNew" id="isNew" value="False" />  @*TODO*@
+            <input type="hidden" asp-for="LogoPath" />
+
+            <partial name="_Team" />
+
+            <div class="form-group">
+                <a asp-action="Index" class="btn btn-default"><i class="glyphicon glyphicon-hand-left"></i> Back</a>
+                <button type="submit" value="Save" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-save"></i> Save
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <div>
+            <h3>@Model.Name</h3>
+        </div>
+        
+        @if (!string.IsNullOrEmpty(Model.LogoPath))
+        {
+            <img src="@Model.LogoPath" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+        }
+    </div>
+</div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

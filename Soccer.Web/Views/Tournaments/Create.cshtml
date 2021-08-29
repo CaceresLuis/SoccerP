@@ -1,0 +1,30 @@
+﻿@model Soccer.Web.Models.TournamentViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>Tournament</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <partial name="_Tournament" />
+
+            <div class="form-group">
+                <a asp-action="Index" class="btn btn-default"><i class="glyphicon glyphicon-hand-left"></i> Back</a>
+                <button type="submit" value="Save" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-save"></i> Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

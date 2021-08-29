@@ -1,0 +1,153 @@
+﻿@model IEnumerable<Soccer.Web.Data.Entities.TeamEntity>
+
+@{
+    var url = "https://localhost:44391/Teams/Edit";
+    ViewData["Title"] = "Teams";
+    var num = 1;
+}
+@if (@ViewBag.Mensaje != null)
+{
+    string msj = TempData["mensaje"].ToString();
+    bool stringCreate = msj.Contains("creado");
+    bool stringDelete = msj.Contains("eliminado");
+    bool stringEdit = msj.Contains("modificado");
+    if (stringCreate == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Succees</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 1900
+            })
+        </script>
+    }
+    else if (stringDelete == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Deleted</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 1900
+            })
+        </script>
+    }
+    else if (stringEdit == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Edit</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 1900
+            })
+        </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            Swal.fire({
+            title: '<h2><strong>Error</strong></h2>',
+                icon: 'warning',
+                html: '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        </script>
+    }
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <p>
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-ok-circle"></i> Create New Team
+                    </a>
+                    || Teams
+                </p>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover table-responsive table-striped" id="MyTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                #
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.LogoPath)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class='clickable-row' data-href='@url/@item.Id'>
+                                    @num
+                                </td>
+                                <td class='clickable-row' data-href='@url/@item.Id'>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td class='clickable-row' data-href='@url/@item.Id'>
+                                    @if (!string.IsNullOrEmpty(item.LogoPath))
+                                    {
+                                        <img src="@item.LogoPath" alt="Image" style="width:100px;height:100px;max-width: 100%; height: auto;" />
+                                    }
+                                </td>
+                                <td>
+                                    <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">
+                                        <i class="glyphicon glyphicon-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            num++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_DeleteDialog" />
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Delete item
+            var item_to_delete;
+
+            $('.deleteItem').click((e) => {
+                item_to_delete = e.currentTarget.dataset.id;
+            });
+
+            $("#btnYesDelete").click(function () {
+                window.location.href = '/Teams/Delete/' + item_to_delete;
+            });
+        });
+
+        jQuery(document).ready(function ($) {
+            $('.clickable-row').css('cursor', 'pointer');
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,47 @@
+﻿@model Soccer.Web.Models.GroupDetailViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<a asp-controller="Groups" asp-action="DetailsGroup" asp-route-id="@Model.GroupId" class="btn btn-default">
+    <i class="glyphicon glyphicon-hand-left"></i> Back
+</a>
+<h4>Team in group: @Model.Group.Name</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddOrUpdateGroupDetail" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="GroupId" />
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="TeamId" />
+            <input type="hidden" name="isNew" id="isNew" value="False" />
+
+            <partial name="_GroupDetail" />
+
+            <div class="form-group">
+                <a asp-controller="Groups" asp-action="DetailsGroup" asp-route-id="@Model.GroupId" class="btn btn-default">
+                    <i class="glyphicon glyphicon-hand-left"></i> Back
+                </a>
+                <button type="submit" value="Create" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-save"></i> Create
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <div>
+            <h2>@Model.Teams.Name</h2>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Teams.LogoPath))
+        {
+            <img src="@Model.Teams.LogoPath" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+        }
+    </div>
+</div>
+    
+
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        }

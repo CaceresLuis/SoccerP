@@ -1,0 +1,40 @@
+﻿@model Soccer.Web.Models.GroupDetailViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Add</h2>
+
+<h4>Team to group: @Model.Group.Name</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddOrUpdateGroupDetail" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="GroupId" />
+            <input type="hidden" name="isNew" id="isNew" value="True" />
+
+            <div class="form-group">
+                <label asp-for="TeamId" class="control-label"></label>
+                <select asp-for="TeamId" asp-items="Model.SelectTeam" class="form-control"></select>
+                <span asp-validation-for="TeamId" class="text-danger"></span>
+            </div>
+
+            <partial name="_GroupDetail" />
+
+            <div class="form-group">
+                <a asp-controller="Groups" asp-action="DetailsGroup" asp-route-id="@Model.GroupId" class="btn btn-default">
+                    <i class="glyphicon glyphicon-hand-left"></i> Back
+                </a>
+                <button type="submit" value="Create" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-save"></i> Create
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

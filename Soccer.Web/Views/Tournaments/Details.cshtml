@@ -1,0 +1,204 @@
+﻿@model Soccer.Web.Data.Entities.TournamentEntity
+
+@{
+    var url = "https://localhost:44391/Groups/DetailsGroup";
+    ViewData["Title"] = "Details";
+}
+@if (@ViewBag.Mensaje != null)
+{
+    string msj = TempData["mensaje"].ToString();
+    bool stringCreate = msj.Contains("creado");
+    bool stringDelete = msj.Contains("eliminado");
+    bool stringedit = msj.Contains("editado");
+    if (stringCreate == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Succees</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 1900
+            })
+        </script>
+    }
+    else if (stringDelete == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Deleted</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 1900
+            })
+        </script>
+    }
+    else if (stringedit == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Edit</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 1900
+            })
+        </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Error</strong></h2>',
+                icon: 'warning',
+                html: '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        </script>
+    }
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+
+<div>
+    <h4>Tournament</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal text-center">
+                <dt>
+                    @Model.Name
+                </dt>
+                <dd>
+                    @Model.Name
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.StartDateLocal)
+                </dt>
+                <dd>
+                    @Model.StartDateLocal
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.EndDateLocal)
+                </dt>
+                <dd>
+                    @Model.EndDateLocal
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </dt>
+                <dd>
+                    @Model.IsActive
+                </dd>
+                <dt>
+                    # Groups
+                </dt>
+                <dd>
+                    @Model.Groups.Count
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            @if (!string.IsNullOrEmpty(Model.LogoPath))
+            {
+                <img src="@Url.Content(Model.LogoPath)" alt="Image" style="width:150px;height:150px;max-width: 100%; height: auto;" />
+            }
+        </div>
+    </div>
+</div>
+<div class="text-center">
+    <a asp-action="Index" class="btn btn-default">
+        <i class="glyphicon glyphicon-hand-left"></i> Back
+    </a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+        <i class="glyphicon glyphicon-pencil"></i> Edit
+    </a>
+    <a asp-controller="Groups" asp-action="AddGroup" asp-route-id="@Model.Id" class="btn btn-primary">
+        <i class="glyphicon glyphicon-ok-circle"></i> Add Group
+    </a>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Groups</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover table-responsive table-striped" id="MyTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                # Teams
+                            </th>
+                            <th>
+                                # Matches
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Groups.OrderBy(g => g.Name))
+                        {
+                            <tr>
+                                <td class='clickable-row' data-href='@url/@item.Id'>
+                                    @item.Name
+                                </td>
+                                <td class='clickable-row' data-href='@url/@item.Id'>
+                                    @item.GroupDetails.Count
+                                </td>
+                                <td class='clickable-row' data-href='@url/@item.Id'>
+                                    @item.Matches.Count
+                                </td>
+                                <td>
+                                    <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">
+                                        <i class="glyphicon glyphicon-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_DeleteDialog" />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#MyTable').DataTable();
+
+            // Delete item
+            var item_to_delete;
+
+            $('.deleteItem').click((e) => {
+                item_to_delete = e.currentTarget.dataset.id;
+            });
+
+            $("#btnYesDelete").click(function () {
+                window.location.href = '/Groups/Delete/' + item_to_delete;
+            });
+        });
+
+        jQuery(document).ready(function ($) {
+            $('.clickable-row').css('cursor', 'pointer');
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
+}

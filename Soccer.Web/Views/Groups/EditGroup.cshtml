@@ -1,0 +1,35 @@
+﻿@model Soccer.Web.Models.GroupViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Group to tournament: @Model.Tournament.Name</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddOrUpdateGroup" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TournamentId" />
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="isNew" id="isNew" value="False" />
+
+            <partial name="_Group" />
+
+            <div class="form-group">
+                <a href="javascript: history.go(-1)" class="btn btn-default">
+                    <i class="glyphicon glyphicon-hand-left"></i> Back
+                </a>
+                <button type="submit" value="Save" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-save"></i> Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

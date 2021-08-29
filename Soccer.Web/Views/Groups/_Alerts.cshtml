@@ -1,0 +1,128 @@
+﻿@if (@ViewBag.Mensaje != null)
+{
+    string msj = TempData["mensaje"].ToString();
+    bool stringCreate = msj.Contains("creado"); //ok
+    bool stringMatchCreate = msj.Contains("vs"); //ok
+    bool stringEdit = msj.Contains("modificado"); //ok
+    bool stringEditado = msj.Contains("Editado"); //ok
+    bool stringDelete = msj.Contains("eliminado"); //ok
+    bool stringMatchClose = msj.Contains("Cerrado"); //ok
+    bool stringMatchDelete = msj.Contains("Cancelado"); //ok
+    bool stringMatchUpdate = msj.Contains("Actualizado"); //ok
+    if (stringCreate == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Succees</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 1900
+            })
+        </script>
+    }
+    else if (stringMatchCreate == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Succees</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 2500
+            })
+        </script>
+    }
+    else if (stringDelete == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Deleted</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 1900
+            })
+        </script>
+    }
+    else if (stringMatchClose == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Deleted</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 2500
+            })
+        </script>
+    }
+    else if (stringMatchUpdate == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Deleted</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 2500
+            })
+        </script>
+    }
+    else if (stringEditado == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Success</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 2500
+            })
+        </script>
+    }
+    else if (stringMatchDelete == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Deleted</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 1900
+            })
+        </script>
+    }
+    else if (stringEdit == true)
+    {
+        <script type="text/javascript">
+            Swal.fire({
+                title: '<h2><strong>Updated</strong></h2>',
+                icon: 'success',
+                html:
+                  '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 1900
+            })
+        </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            Swal.fire({
+            title: '<h2><strong>Error</strong></h2>',
+                icon: 'warning',
+                html: '<h3> <b> @msj </b> </h3>',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        </script>
+    }
+}

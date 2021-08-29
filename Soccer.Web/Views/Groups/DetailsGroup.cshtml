@@ -1,0 +1,314 @@
+﻿@model Soccer.Web.Data.Entities.GroupEntity
+
+@{
+    var url = "https://localhost:44391/GroupDetails/EditGroupDetail";
+    ViewData["Title"] = "Details";
+}
+
+    <partial name="_Alerts" />
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<h2>Details</h2>
+
+<div class="w3-bar w3-black">
+    <button class="w3-bar-item w3-button tablink w3-green" onclick="openCity(event,'Teams')">Teams</button>
+    <button class="w3-bar-item w3-button tablink" onclick="openCity(event,'Matchs')">Matchs</button>
+</div>
+
+<div id="Teams" class="w3-container w3-border city col-lg-12">
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    Tournament
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Tournament.Name)
+                </dd>
+                <dt>
+                    Group
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt>
+                    # Teams
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.GroupDetails.Count)
+                </dd>
+                <dt>
+                    # Matches
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Matches.Count)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            @if (!string.IsNullOrEmpty(Model.Tournament.LogoPath))
+            {
+                <img src="@Url.Content(Model.Tournament.LogoPath)" alt="Image" style="width:100px;height:100px;max-width: 100%; height: auto;" />
+            }
+        </div>
+    </div>
+
+    <div>
+        <a asp-controller="Tournaments" asp-action="Details" asp-route-id="@Model.Tournament.Id" class="btn btn-default">
+            <i class="glyphicon glyphicon-hand-left"></i> Back
+        </a>
+        <a asp-action="EditGroup" asp-route-id="@Model.Id" class="btn btn-warning">
+            <i class="glyphicon glyphicon-pencil"></i> Edit
+        </a>
+        <a asp-controller="GroupDetails" asp-action="AddGroupDetail" asp-route-id="@Model.Id" class="btn btn-primary">
+            <i class="glyphicon glyphicon-ok-circle"></i> Add Team
+        </a>
+        <a asp-controller="Matchs" asp-action="AddMatch" asp-route-id="@Model.Id" class="btn btn-primary">
+            <i class="glyphicon glyphicon-plus"></i> Add Match
+        </a>
+    </div>
+    @if (Model.GroupDetails.Count != 0)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Teams</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover table-responsive table-striped" id="MyTableTeams">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().Team.LogoPath)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().Team.Name)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().MatchesPlayed)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().MatchesWon)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().MatchesTied)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().MatchesLost)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().Points)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().GoalsFor)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().GoalsAgainst)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().GoalDifference)
+                                    </th>
+                                    <th width="150px"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.GroupDetails
+                                  .OrderByDescending(g => g.Points)
+                                  .ThenByDescending(g => g.GoalDifference)
+                                  .ThenByDescending(g => g.GoalsFor))
+                                {
+                                    <tr>
+                                        <td class='clickable-row' data-href='@url/@item.Id'>
+                                            @if (!string.IsNullOrEmpty(item.Team.LogoPath))
+                                            {
+                                                <img src="@Url.Content(item.Team.LogoPath)" alt="Image" style="width:50px;height:50px;max-width: 100%; height: auto;" />
+                                            }
+                                        </td>
+                                        <td class='clickable-row' data-href='@url/@item.Id'>
+                                            @Html.DisplayFor(modelItem => item.Team.Name)
+                                        </td>
+                                        <td class='clickable-row' data-href='@url/@item.Id'>
+                                            @Html.DisplayFor(modelItem => item.MatchesPlayed)
+                                        </td>
+                                        <td class='clickable-row' data-href='@url/@item.Id'>
+                                            @Html.DisplayFor(modelItem => item.MatchesWon)
+                                        </td>
+                                        <td class='clickable-row' data-href='@url/@item.Id'>
+                                            @Html.DisplayFor(modelItem => item.MatchesTied)
+                                        </td>
+                                        <td class='clickable-row' data-href='@url/@item.Id'>
+                                            @Html.DisplayFor(modelItem => item.MatchesLost)
+                                        </td>
+                                        <td class='clickable-row' data-href='@url/@item.Id'>
+                                            @Html.DisplayFor(modelItem => item.Points)
+                                        </td>
+                                        <td class='clickable-row' data-href='@url/@item.Id'>
+                                            @Html.DisplayFor(modelItem => item.GoalsFor)
+                                        </td>
+                                        <td class='clickable-row' data-href='@url/@item.Id'>
+                                            @Html.DisplayFor(modelItem => item.GoalsAgainst)
+                                        </td>
+                                        <td class='clickable-row' data-href='@url/@item.Id'>
+                                            @Html.DisplayFor(modelItem => item.GoalDifference)
+                                        </td>
+                                        <td>
+                                            <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <br />
+</div>
+
+<div id="Matchs" class="w3-container w3-border city" style="display:none">
+    <br />
+    @if (Model.GroupDetails.Count != 0 && Model.GroupDetails.FirstOrDefault().Group.Matches.Count != 0)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Matches</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover table-responsive table-striped" id="MyTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().Group.Matches.FirstOrDefault().Date)
+                                    </th>
+                                    <th>
+                                        Local
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().Group.Matches.FirstOrDefault().GoalsLocal)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().Group.Matches.FirstOrDefault().GoalsVisitor)
+                                    </th>
+                                    <th>
+                                        Visitor
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GroupDetails.FirstOrDefault().Group.Matches.FirstOrDefault().IsClosed)
+                                    </th>
+                                    <th width="150px"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.GroupDetails.FirstOrDefault().Group.Matches
+                          .OrderBy(m => m.Date))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateLocal)
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(item.Local.LogoPath))
+                                            {
+                                                <img src="@Url.Content(item.Local.LogoPath)" alt="Image" style="width:50px;height:50px;max-width: 100%; height: auto;" />
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.GoalsLocal)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.GoalsVisitor)
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(item.Visitor.LogoPath))
+                                            {
+                                                <img src="@Url.Content(item.Visitor.LogoPath)" alt="Image" style="width:50px;height:50px;max-width: 100%; height: auto;" />
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsClosed)
+                                        </td>
+                                        <td>
+                                            @if (item.IsClosed == true)
+                                            {
+                                                <a asp-controller="Matchs" asp-action="EditMatch" asp-route-id="@item.Id" class="btn btn-warning"><i class="glyphicon glyphicon-pencil"></i></a>
+                                            }
+                                            else
+                                            {
+                                                <a asp-controller="Matchs" asp-action="CloseMatch" asp-route-id="@item.Id" class="btn btn-success"><i class="glyphicon glyphicon-check"></i></a>
+                                            }
+                                            <button data-id="@item.Id" class="btn btn-danger deleteItemMath" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<partial name="_DeleteDialog" />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#MyTable').DataTable();
+
+            // Delete item
+            var item_to_delete;
+            var toDelete;
+
+            $('.deleteItem').click((e) => {
+                toDelete = 1;
+                item_to_delete = e.currentTarget.dataset.id;
+            });
+
+            $('.deleteItemMath').click((e) => {
+                toDelete = 2;
+                item_to_delete = e.currentTarget.dataset.id;
+            });
+
+            $("#btnYesDelete").click(function () {
+                if (toDelete == 1) {
+                    window.location.href = '/GroupDetails/DeleteGroupDetail/' + item_to_delete;
+                } else {
+                    window.location.href = '/Matchs/DeleteMatch/' + item_to_delete;
+                }
+            });
+        });
+    </script>
+    <script>
+        function openCity(evt, cityName) {
+            var i, x, tablinks;
+            x = document.getElementsByClassName("city");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < x.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" w3-green", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " w3-green";
+        }
+
+        jQuery(document).ready(function ($) {
+            $('.clickable-row').css('cursor', 'pointer');
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
+}
