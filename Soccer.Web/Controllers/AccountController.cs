@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
+using Soccer.Common.Models;
 
 namespace Soccer.Web.Controllers
 {
@@ -114,23 +115,29 @@ namespace Soccer.Web.Controllers
                     return View(model);
                 }
 
-                string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                string tokenLink = Url.Action("ConfirmEmail", "Account", new
-                {
-                    userid = user.Id,
-                    token = myToken
-                }, protocol: HttpContext.Request.Scheme);
+                //ENVIAR POR CORREO EL TOKEN PARA CONFIRMACION DE CUENTA
+                //string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                //string tokenLink = Url.Action("ConfirmEmail", "Account", new
+                //{
+                //    userid = user.Id,
+                //    token = myToken
+                //}, protocol: HttpContext.Request.Scheme);
 
-                Common.Models.Response response = _mailHelper.SendMail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                    $"To allow the user, " +
-                    $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
-                if (response.IsSuccess)
-                {
-                    ViewBag.Message = "The instructions to allow your user has been sent to email.";
-                    return View(model);
-                }
+                //Response response = _mailHelper.SendMail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                //    $"To allow the user, " +
+                //    $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                //if (response.IsSuccess)
+                //{
+                //    ViewBag.Message = "The instructions to allow your user has been sent to email.";
+                //    return View(model);
+                //}
+                //ModelState.AddModelError(string.Empty, response.Message);
 
-                ModelState.AddModelError(string.Empty, response.Message);
+                //CREACION DEL TOKEN Y CONFIRMACION QUEMADA
+                string token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
+
+                ModelState.AddModelError(string.Empty, "Usuario Registrado");
             }
 
             model.Teams = _combosHelper.GetComboTeams();
